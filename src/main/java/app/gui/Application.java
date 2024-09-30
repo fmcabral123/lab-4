@@ -14,15 +14,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import api.GradeDataBase;
 import api.MongoGradeDataBase;
 import app.Config;
 import entity.Grade;
-import usecase.FormTeamUseCase;
-import usecase.GetAverageGradeUseCase;
-import usecase.GetGradeUseCase;
-import usecase.JoinTeamUseCase;
-import usecase.LeaveTeamUseCase;
-import usecase.LogGradeUseCase;
+import usecase.*;
 
 /**
  * GUI class to run the GUI for the Grade App.
@@ -240,7 +236,8 @@ public class Application {
     // TODO Task 4: modify this method so that it takes in a getTopGradeUseCase
     //              Note: this will require you to update the code which calls this method.
     private static JPanel createManageTeamCard(JFrame jFrame, LeaveTeamUseCase leaveTeamUseCase,
-                                               GetAverageGradeUseCase getAverageGradeUseCase) {
+                                               GetAverageGradeUseCase getAverageGradeUseCase,
+                                               GetTopGradeUseCase getTopGradeUseCase) {
         final JPanel theCard = new JPanel();
         theCard.setLayout(new GridLayout(ROWS, COLS));
         final JTextField courseField = new JTextField(20);
@@ -265,6 +262,18 @@ public class Application {
         });
 
         // TODO Task 4: Add action listener for getTopGrade button, follow example of getAverageButton
+        gettopgradeButton.addActionListener(event -> {
+            final String course = courseField.getText();
+            try {
+                final float top = getTopGradeUseCase.getTopGrade(course);
+                JOptionPane.showMessageDialog(jFrame, "Top Grade: " + top);
+                courseField.setText("");
+            }
+            catch (Exception ex) {
+                JOptionPane.showMessageDialog(jFrame, ex.getMessage());
+            }
+        });
+
 
         leaveTeamButton.addActionListener(event -> {
             try {
